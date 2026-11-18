@@ -286,6 +286,14 @@ def order_row(p):
         </li>"""
 
 
+def ring_o(title):
+    """Draw the "o" of the last "sound" as the brass eyelet; the letter stays in the text."""
+    i = title.rfind("sound")
+    if i < 0:
+        return title
+    return title[:i] + 's<span class="o-ring">o</span>und' + title[i + 5:]
+
+
 def build_home():
     root = ""
     intro = C["intro"]
@@ -367,7 +375,7 @@ def build_home():
   <section class="hero" aria-labelledby="hero-title">
     <div class="container hero-grid">
       <div class="hero-text">
-        <h1 id="hero-title" class="hero-title">{e(intro['title'])}</h1>
+        <h1 id="hero-title" class="hero-title">{ring_o(e(intro['title']))}</h1>
         <div class="hero-actions">
           <a class="btn btn-ink" href="#products">Products</a>
           <a class="text-link" href="#order">Order form</a>

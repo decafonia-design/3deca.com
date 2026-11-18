@@ -140,6 +140,8 @@ body { font-weight: 350; }
 .hero-grid { display: grid; gap: clamp(32px, 5vw, 80px); align-items: center; }
 @media (min-width: 1000px) { .hero-grid { grid-template-columns: 1fr 1fr; } }
 .hero-title { font-weight: 300; font-size: clamp(1.8rem, 1.25rem + 1.7vw, 2.75rem); line-height: 1.08; letter-spacing: -0.03em; margin-bottom: 2rem; text-wrap: balance; }
+.o-ring { color: transparent; background: var(--ring) 50% 72% / 0.56em 0.56em no-repeat; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5)); }
+.o-ring::selection { color: var(--bg); }
 .hero-lead { max-width: 42ch; font-size: clamp(1.02rem, 0.98rem + 0.2vw, 1.15rem); line-height: 1.55; color: var(--ink-2); margin: 0 0 2rem; }
 .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1.5rem; }
 .hero-media { position: relative; margin: 0; width: 100%; max-width: 600px; justify-self: end; --gap: 6px; }
