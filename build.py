@@ -402,6 +402,7 @@ def build_home():
     </div>
   </section>
 
+  <div class="container"><div class="rule" aria-hidden="true"><span class="rule-ring"></span></div></div>
   <section class="section in-use" id="in-use" aria-labelledby="use-title">
     <div class="container">
       <div class="section-bar">
@@ -411,6 +412,7 @@ def build_home():
     </div>
   </section>
 
+  <div class="container"><div class="rule" aria-hidden="true"><span class="rule-ring"></span></div></div>
   <section class="section about" id="about" aria-labelledby="about-title">
     <div class="container split">
       <h2 id="about-title" class="section-title">About</h2>
