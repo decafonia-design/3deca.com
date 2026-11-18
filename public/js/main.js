@@ -76,7 +76,7 @@
           void img.offsetWidth; /* start the fade from opacity 0 */
           img.classList.add("is-on");
           /* the new image dissolves in on top; the old one stays until it is fully covered */
-          if (oldImg) setTimeout(function () { if (oldImg.parentNode) oldImg.remove(); }, 3600);
+          if (oldImg) setTimeout(function () { if (oldImg.parentNode) oldImg.remove(); }, 2400);
           tile.href = item.href;
           tile.setAttribute("aria-label", item.name);
           var code = $(".tile-code", tile);
@@ -90,7 +90,7 @@
       };
       var run = function () {
         var go = !hovered && visible && !document.hidden;
-        if (go && !timer) timer = setInterval(swap, 2600);
+        if (go && !timer) timer = setInterval(swap, 1600);
         if (!go && timer) { clearInterval(timer); timer = null; }
       };
       collage.addEventListener("mouseenter", function () { hovered = true; run(); });
