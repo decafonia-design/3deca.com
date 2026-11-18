@@ -31,7 +31,7 @@ De map `public/` **is** de website. Je zet die map online en klaar.
 ## Mappen
 
 ```
-3deca-website/
+3deca.com/
 ├── content.json   ← alle teksten, prijzen, opties, reviews en alt-teksten
 ├── build.py       ← maakt de HTML-pagina's uit content.json
 └── public/        ← de website (deze map zet je online)
@@ -55,17 +55,15 @@ product heet `c-720.webp` / `c-1600.webp` (een uitsnede in 4:3); de alt-tekst st
 ## Online zetten (gratis, via GitHub Pages)
 
 De site wordt gratis gehost door GitHub Pages, met HTTPS. Je domeinnaam en je e-mail blijven bij Combell.
-Elke wijziging in `3deca-website/public/` die op de branch `ha-deployment` komt, zet GitHub automatisch
-online (workflow `.github/workflows/pages-3deca.yml`).
+Deze repository (`decafonia-design/3deca.com`) bevat alleen de website. Elke wijziging in `public/`
+die op de branch `main` komt, zet GitHub automatisch online (workflow `.github/workflows/pages.yml`).
 
-### Eenmalig in GitHub
-1. Voeg de pull request samen in `ha-deployment`.
-2. Ga in de repository naar **Settings → Pages**, en kies bij **Source** voor **GitHub Actions**.
-3. Start de workflow eenmalig: **Actions → Publish 3deca.com → Run workflow**.
-4. Vul in **Settings → Pages** bij **Custom domain** `www.3deca.com` in. Vink **Enforce HTTPS** aan
-   zodra GitHub dat toelaat (dat kan een tot enkele uren duren na de DNS-wijziging).
+### Eenmalig in GitHub (al gedaan op 18 november 2026)
+1. **Settings → Pages**: **Source** staat op **GitHub Actions**.
+2. **Custom domain** is `www.3deca.com`, met **Enforce HTTPS** aan.
+3. Opnieuw publiceren zonder wijziging: **Actions → Publish 3deca.com → Run workflow**.
 
-### Eenmalig bij Combell (DNS-beheer van 3deca.com)
+### Eenmalig bij Combell (DNS-beheer van 3deca.com, al gedaan op 18 november 2026)
 Pas **alleen** deze records aan. Verwijder de bestaande A- en CNAME-records voor `3deca.com` en `www`
 die naar de Sitebuilder wijzen, en zet er dit voor in de plaats:
 
