@@ -149,7 +149,6 @@ body { font-weight: 350; }
 .tile-link { position: absolute; inset: 0; display: block; }
 .tile-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.06); transition: opacity 3.2s cubic-bezier(0.45, 0, 0.55, 1), transform 11s cubic-bezier(0.2, 0.6, 0.3, 1); will-change: opacity, transform; }
 .tile-img.is-on { opacity: 1; transform: scale(1); }
-.collage-rivet { position: absolute; z-index: 2; top: 50%; left: calc((100% - var(--gap)) * 1.55 / 2.55 + var(--gap) / 2); width: clamp(30px, 3.4vw, 44px); aspect-ratio: 1; transform: translate(-50%, -50%); background: var(--ring) center / contain no-repeat; filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.65)); pointer-events: none; }
 .tile-code { position: absolute; left: 10px; bottom: 8px; font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.04em; color: var(--ink); opacity: 0; transition: opacity 0.4s; text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6); }
 .tile-link:hover .tile-code, .tile-link:focus-visible .tile-code { opacity: 1; }
 .facts { list-style: none; margin: clamp(40px, 5vw, 64px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; border-top: 1px solid var(--line); }

@@ -16,7 +16,7 @@ De map `public/` **is** de website. Je zet die map online en klaar.
 - **Homepagina**: bovenaan een kleine, rustige collage van drie vlakken waarin alle modellen langzaam in elkaar
   overvloeien (volgorde in `content.json` → `intro.collage`). Stil voor wie minder beweging wil.
 - **Messing ring** (`public/img/ring/`): de oogring van de ZMT-mount, uitgesneden met doorzichtig gat. Gebruikt als
-  merkteken in het logo, als "klinknagel" op de collage, als scheiding (`.rule`, sectielijnen) en als opsommingsteken.
+  merkteken in het logo, als scheiding (`.rule`, sectielijnen) en als opsommingsteken.
 - **Collectie met filters** per systeem (Zaxcom, Sennheiser, batterijen), een rustige tegel "Need a different fit?"
   voor maatwerk, een strook "In use" met foto's van de set, een korte "About", reviews en een FAQ.
 - **Productpagina's**: grote fotoviewer (studio- en setfoto's), keuzeknoppen per variant die de prijs live

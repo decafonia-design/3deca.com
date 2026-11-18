@@ -376,7 +376,6 @@ def build_home():
       </div>
       <figure class="hero-media" data-collage='{collage_data}'>
         <ul class="collage" role="list">{tiles}</ul>
-        <span class="collage-rivet" aria-hidden="true"></span>
       </figure>
     </div>
   </section>
