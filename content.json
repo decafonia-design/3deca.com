@@ -11,9 +11,15 @@
   },
   "intro": {
     "title": "Tools for production sound",
-    "hero_image": "zmt-mount/06",
-    "hero_alt": "The ZMT mount with transmitter and mic on a gooseneck, held by a spring clamp.",
-    "hero_product": "zmt-mount"
+    "collage": [
+      "zmt-mount",
+      "sennheiser-caddy",
+      "batterybeltclip",
+      "zmtstoragebox",
+      "urxbeltclip",
+      "np50box",
+      "sennheiserbeltclip"
+    ]
   },
   "facts": [
     {

@@ -12,6 +12,7 @@ Needs Python 3.8+ and Pillow (only to read image sizes).
 """
 
 import datetime
+import hashlib
 import html
 import json
 import sys
@@ -29,6 +30,15 @@ SITE = C["site"]
 PRODUCTS = C["products"]
 BY_SLUG = {p["slug"]: p for p in PRODUCTS}
 YEAR = datetime.date.today().year
+
+
+def asset_version(rel):
+    """Short content hash, so browsers fetch a changed stylesheet or script right away."""
+    return hashlib.sha1((PUBLIC / rel).read_bytes()).hexdigest()[:8]
+
+
+CSS_V = asset_version("css/style.css")
+JS_V = asset_version("js/main.js")
 
 
 # --------------------------------------------------------------------------
@@ -148,9 +158,9 @@ def head(root, title, description, canonical, extra=""):
 <link rel="icon" href="{root}favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="{root}apple-touch-icon.png">
 <link rel="preload" href="{root}fonts/archivo-var.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="{root}css/style.css">
+<link rel="stylesheet" href="{root}css/style.css?v={CSS_V}">
 <script>document.documentElement.classList.add("js")</script>
-<script src="{root}js/main.js" defer></script>
+<script src="{root}js/main.js?v={JS_V}" defer></script>
 {extra}</head>
 """
 
@@ -279,7 +289,7 @@ def order_row(p):
 def build_home():
     root = ""
     intro = C["intro"]
-    hero_p = BY_SLUG[intro["hero_product"]]
+    collage = [BY_SLUG[s] for s in intro["collage"]]
     threshold = SITE["free_shipping_threshold"]
 
     facts = "".join(
@@ -338,6 +348,19 @@ def build_home():
         "description": SITE["description"],
     }
 
+    tiles = "".join(
+        f"""<li class="tile tile-{k}"><a class="tile-link" href="{product_href(root, q['slug'])}" aria-label="{e(q['name'])}" data-tile>
+            <img class="tile-img is-on" src="{root}img/{q['slug']}/c-720.webp" srcset="{srcset(root, q['slug'] + '/c')}" sizes="{'(min-width: 1000px) 30vw, 60vw' if k == 0 else '(min-width: 1000px) 18vw, 40vw'}" width="720" height="540" alt="" {'fetchpriority="high"' if k == 0 else ''} decoding="async">
+            <span class="tile-code" aria-hidden="true">{q['code']}</span>
+          </a></li>"""
+        for k, q in enumerate(collage[:3])
+    )
+    collage_data = e(json.dumps([
+        {"href": product_href(root, q["slug"]), "name": q["name"], "code": q["code"],
+         "src": f"{root}img/{q['slug']}/c-720.webp", "srcset": srcset(root, q["slug"] + "/c")}
+        for q in collage
+    ]))
+
     out = head(root, "3Deca · Tools for production sound", SITE["description"], SITE["url"] + "/", json_ld(ld))
     out += '<body class="page-home">\n' + header(root)
     out += f"""<main id="main">
@@ -351,13 +374,11 @@ def build_home():
         </div>
         <ul class="facts" role="list">{facts}</ul>
       </div>
-      <figure class="hero-media">
-        <a class="hero-shot" href="{product_href(root, hero_p['slug'])}">
-          {picture(root, intro['hero_image'], intro['hero_alt'], '(min-width: 1000px) 60vw, 100vw', 'hero-img', eager=True)}
-        </a>
+      <figure class="hero-media" data-collage='{collage_data}'>
+        <ul class="collage" role="list">{tiles}</ul>
         <figcaption class="hero-caption">
-          <span><span class="code">{hero_p['code']}</span> {e(hero_p['name'])}</span>
-          <a href="{product_href(root, hero_p['slug'])}">{price_label(hero_p)}<span class="sr-only"> · view {e(hero_p['name'])}</span></a>
+          <span><span class="code">{min(q['code'] for q in collage)}–{max(q['code'] for q in collage)[-2:]}</span> The collection</span>
+          <button type="button" class="collage-toggle" data-collage-toggle hidden>Pause</button>
         </figcaption>
       </figure>
     </div>
@@ -531,10 +552,12 @@ def build_product(i, p):
     rel = "".join(product_card(root, q) for q in related(p))
 
     video_section = ""
+    video_link = ('<a class="video-link" href="#video"><span class="video-link-icon" aria-hidden="true"></span>Watch the video</a>\n        '
+                  if p.get("video") else "")
     if p.get("video"):
         vid = p["video"]["youtube"]
         poster = f"{slug}/{p['video']['poster']}"
-        video_section = f"""  <section class="section video-section" aria-labelledby="video-title">
+        video_section = f"""  <section class="section video-section" id="video" aria-labelledby="video-title">
     <div class="container">
       <div class="section-bar">
         <h2 id="video-title" class="section-title">Video</h2>
@@ -624,7 +647,7 @@ def build_product(i, p):
           <a class="text-link" href="mailto:{SITE['email']}?subject={e('Custom request: ' + p['name'])}">Ask about a custom build</a>
         </form>
 
-        <ul class="assurances" role="list">
+        {video_link}<ul class="assurances" role="list">
           <li>Free EU shipping above {euro(SITE['free_shipping_threshold'])}</li>
         </ul>
       </div>

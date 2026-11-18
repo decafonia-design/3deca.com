@@ -40,6 +40,84 @@
     });
   }
 
+  /* ---------- hero collage: the products slowly fade into one another ---------- */
+  (function () {
+  var collage = $("[data-collage]");
+  if (collage && !reduceMotion) {
+    var items = [];
+    try { items = JSON.parse(collage.getAttribute("data-collage")) || []; } catch (e) { items = []; }
+    var tiles = $$("[data-tile]", collage);
+    var toggleBtn = $("[data-collage-toggle]", collage);
+    if (items.length > tiles.length && tiles.length) {
+      var shown = tiles.map(function (t, i) { return i; });
+      var queue = items.map(function (x, i) { return i; }).slice(tiles.length);
+      var order = [1, 0, 2];
+      var step = 0, timer = null, paused = false, hovered = false, visible = true;
+
+      var swap = function () {
+        var t = order[step % order.length] % tiles.length;
+        step++;
+        var tile = tiles[t];
+        var next = queue.shift();
+        queue.push(shown[t]);
+        shown[t] = next;
+        var item = items[next];
+        var oldImg = $(".tile-img.is-on", tile);
+        var img = document.createElement("img");
+        img.className = "tile-img";
+        img.alt = "";
+        img.decoding = "async";
+        if (oldImg) img.sizes = oldImg.sizes;
+        var done = false;
+        var reveal = function () {
+          if (done) return;
+          done = true;
+          tile.insertBefore(img, oldImg ? oldImg.nextSibling : tile.firstChild);
+          void img.offsetWidth; /* start the fade from opacity 0 */
+          img.classList.add("is-on");
+          if (oldImg) {
+            oldImg.classList.remove("is-on");
+            setTimeout(function () { if (oldImg.parentNode) oldImg.remove(); }, 2600);
+          }
+          tile.href = item.href;
+          tile.setAttribute("aria-label", item.name);
+          var code = $(".tile-code", tile);
+          if (code) code.textContent = item.code;
+        };
+        img.onload = reveal;
+        img.onerror = reveal;
+        img.srcset = item.srcset;
+        img.src = item.src;
+        if (img.complete) reveal();
+      };
+      var run = function () {
+        var go = !paused && !hovered && visible && !document.hidden;
+        if (go && !timer) timer = setInterval(swap, 3800);
+        if (!go && timer) { clearInterval(timer); timer = null; }
+      };
+      collage.addEventListener("mouseenter", function () { hovered = true; run(); });
+      collage.addEventListener("mouseleave", function () { hovered = false; run(); });
+      collage.addEventListener("focusin", function () { hovered = true; run(); });
+      collage.addEventListener("focusout", function () { hovered = false; run(); });
+      document.addEventListener("visibilitychange", run);
+      if ("IntersectionObserver" in window) {
+        new IntersectionObserver(function (entries) { visible = entries[0].isIntersecting; run(); }).observe(collage);
+      }
+      if (toggleBtn) {
+        toggleBtn.hidden = false;
+        toggleBtn.setAttribute("aria-pressed", "false");
+        toggleBtn.addEventListener("click", function () {
+          paused = !paused;
+          toggleBtn.textContent = paused ? "Play" : "Pause";
+          toggleBtn.setAttribute("aria-pressed", String(paused));
+          run();
+        });
+      }
+      run();
+    }
+  }
+  })();
+
   /* ---------- video: load YouTube only after the visitor clicks play ---------- */
   $$("[data-video]").forEach(function (box) {
     var btn = $("[data-video-play]", box);
