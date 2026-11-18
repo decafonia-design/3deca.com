@@ -198,7 +198,7 @@ def footer(root):
     <div class="footer-grid">
       <div class="footer-brand">
         <a class="footer-mark" href="{home}" aria-label="3Deca, home">{WORDMARK}</a>
-        <p>Tools for production sound.</p>
+        <p>Production sound tools.</p>
       </div>
       <div>
         <h2 class="footer-h">Products</h2>
@@ -369,7 +369,7 @@ def build_home():
         for q in collage
     ]))
 
-    out = head(root, "3Deca · Tools for production sound", SITE["description"], SITE["url"] + "/", json_ld(ld))
+    out = head(root, "3Deca · Production sound tools", SITE["description"], SITE["url"] + "/", json_ld(ld))
     out += '<body class="page-home">\n' + header(root)
     out += f"""<main id="main">
   <section class="hero" aria-labelledby="hero-title">
