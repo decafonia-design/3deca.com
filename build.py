@@ -438,6 +438,7 @@ def build_home():
     </div>
   </section>
 
+  <div class="container"><div class="rule" aria-hidden="true"><span class="rule-ring"></span></div></div>
   <section class="section order" id="order" aria-labelledby="order-title">
     <div class="container">
       <div class="section-bar">

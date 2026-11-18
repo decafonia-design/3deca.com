@@ -140,7 +140,9 @@ body { font-weight: 350; }
 .hero-grid { display: grid; gap: clamp(32px, 5vw, 80px); align-items: center; }
 @media (min-width: 1000px) { .hero-grid { grid-template-columns: 1fr 1fr; } }
 .hero-title { font-weight: 300; font-size: clamp(1.8rem, 1.25rem + 1.7vw, 2.75rem); line-height: 1.08; letter-spacing: -0.03em; margin-bottom: 2rem; text-wrap: balance; }
-.o-ring { color: transparent; background: var(--ring) 50% 72% / 0.56em 0.56em no-repeat; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5)); }
+/* the ring sits on the baseline at x-height, like the letter it replaces (Archivo: o is 0.55em tall, baseline 0.87em from the top of a 1.08 line) */
+.o-ring { position: relative; display: inline-block; width: 0.6em; color: transparent; }
+.o-ring::before { content: ""; position: absolute; left: 50%; top: 0.325em; width: 0.562em; height: 0.562em; margin-left: -0.268em; background: var(--ring) center / contain no-repeat; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5)); }
 .o-ring::selection { color: var(--bg); }
 .hero-lead { max-width: 42ch; font-size: clamp(1.02rem, 0.98rem + 0.2vw, 1.15rem); line-height: 1.55; color: var(--ink-2); margin: 0 0 2rem; }
 .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1.5rem; }
@@ -163,15 +165,11 @@ body { font-weight: 350; }
 /* ---------- sections ---------- */
 .section { padding-block: clamp(56px, 7vw, 104px); }
 .split { position: relative; display: grid; gap: 1.25rem clamp(32px, 5vw, 80px); padding-top: 1.5rem; }
-.split::before { content: ""; position: absolute; top: 0; left: calc(var(--gutter) + 22px); right: var(--gutter); border-top: 1px solid var(--line); }
-.split::after { content: ""; position: absolute; top: -7px; left: var(--gutter); width: 14px; height: 14px; background: var(--ring) center / contain no-repeat; }
 .rule { display: flex; align-items: center; gap: 18px; }
 .rule::before, .rule::after { content: ""; flex: 1; height: 1px; }
 .rule::before { background: linear-gradient(to right, transparent, var(--line-2)); }
 .rule::after { background: linear-gradient(to left, transparent, var(--line-2)); }
 .rule-ring { width: 26px; height: 26px; background: var(--ring) center / contain no-repeat; filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5)); }
-.order { position: relative; }
-.order::before { content: ""; position: absolute; z-index: 1; top: 0; left: 50%; width: 22px; height: 22px; transform: translate(-50%, -50%); background: var(--ring) center / contain no-repeat; }
 @media (min-width: 900px) { .split { grid-template-columns: 1fr 2.4fr; } }
 .section-bar { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1.5rem 3rem; margin-bottom: clamp(32px, 4vw, 56px); }
 
@@ -247,7 +245,7 @@ body { font-weight: 350; }
 .faq-item p { margin: 0 0 1.25rem; max-width: 60ch; color: var(--ink-2); }
 
 /* ---------- order ---------- */
-.order { background: var(--paper); border-top: 1px solid var(--line); }
+.order .section-title { font-size: clamp(1.75rem, 1.35rem + 1.2vw, 2.4rem); }
 .order .section-bar { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
 .order-points { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.3rem; font-size: 0.95rem; color: var(--ink-2); }
 .order-points li, .assurances li { position: relative; padding-left: 1.45rem; }
