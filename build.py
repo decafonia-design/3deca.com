@@ -376,14 +376,12 @@ def build_home():
       </div>
       <figure class="hero-media" data-collage='{collage_data}'>
         <ul class="collage" role="list">{tiles}</ul>
-        <figcaption class="hero-caption">
-          <span><span class="code">{min(q['code'] for q in collage)}–{max(q['code'] for q in collage)[-2:]}</span> The collection</span>
-          <button type="button" class="collage-toggle" data-collage-toggle hidden>Pause</button>
-        </figcaption>
+        <span class="collage-rivet" aria-hidden="true"></span>
       </figure>
     </div>
   </section>
 
+  <div class="container"><div class="rule" aria-hidden="true"><span class="rule-ring"></span></div></div>
   <section class="section shop" id="products" aria-labelledby="shop-title">
     <div class="container">
       <div class="section-bar">

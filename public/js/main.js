@@ -47,12 +47,11 @@
     var items = [];
     try { items = JSON.parse(collage.getAttribute("data-collage")) || []; } catch (e) { items = []; }
     var tiles = $$("[data-tile]", collage);
-    var toggleBtn = $("[data-collage-toggle]", collage);
     if (items.length > tiles.length && tiles.length) {
       var shown = tiles.map(function (t, i) { return i; });
       var queue = items.map(function (x, i) { return i; }).slice(tiles.length);
       var order = [1, 0, 2];
-      var step = 0, timer = null, paused = false, hovered = false, visible = true;
+      var step = 0, timer = null, hovered = false, visible = true;
 
       var swap = function () {
         var t = order[step % order.length] % tiles.length;
@@ -62,7 +61,8 @@
         queue.push(shown[t]);
         shown[t] = next;
         var item = items[next];
-        var oldImg = $(".tile-img.is-on", tile);
+        var imgs = $$(".tile-img", tile);
+        var oldImg = imgs[imgs.length - 1];
         var img = document.createElement("img");
         img.className = "tile-img";
         img.alt = "";
@@ -75,10 +75,8 @@
           tile.insertBefore(img, oldImg ? oldImg.nextSibling : tile.firstChild);
           void img.offsetWidth; /* start the fade from opacity 0 */
           img.classList.add("is-on");
-          if (oldImg) {
-            oldImg.classList.remove("is-on");
-            setTimeout(function () { if (oldImg.parentNode) oldImg.remove(); }, 2600);
-          }
+          /* the new image dissolves in on top; the old one stays until it is fully covered */
+          if (oldImg) setTimeout(function () { if (oldImg.parentNode) oldImg.remove(); }, 3600);
           tile.href = item.href;
           tile.setAttribute("aria-label", item.name);
           var code = $(".tile-code", tile);
@@ -91,8 +89,8 @@
         if (img.complete) reveal();
       };
       var run = function () {
-        var go = !paused && !hovered && visible && !document.hidden;
-        if (go && !timer) timer = setInterval(swap, 3800);
+        var go = !hovered && visible && !document.hidden;
+        if (go && !timer) timer = setInterval(swap, 2600);
         if (!go && timer) { clearInterval(timer); timer = null; }
       };
       collage.addEventListener("mouseenter", function () { hovered = true; run(); });
@@ -102,16 +100,6 @@
       document.addEventListener("visibilitychange", run);
       if ("IntersectionObserver" in window) {
         new IntersectionObserver(function (entries) { visible = entries[0].isIntersecting; run(); }).observe(collage);
-      }
-      if (toggleBtn) {
-        toggleBtn.hidden = false;
-        toggleBtn.setAttribute("aria-pressed", "false");
-        toggleBtn.addEventListener("click", function () {
-          paused = !paused;
-          toggleBtn.textContent = paused ? "Play" : "Pause";
-          toggleBtn.setAttribute("aria-pressed", String(paused));
-          run();
-        });
       }
       run();
     }
