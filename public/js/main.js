@@ -40,7 +40,47 @@
     });
   }
 
-  /* ---------- hero collage: the products slowly fade into one another ---------- */
+  /* ---------- hero: hovering a product name shows its photo full-bleed ---------- */
+  (function () {
+    var hero = $("[data-hero]");
+    if (!hero) return;
+    var items = $$("[data-hero-item]", hero);
+    var photos = $$("[data-hero-photo]", hero);
+    var metaOut = $("[data-hero-meta-out]", hero);
+    var current = 0, held = false, timer = null, visible = true;
+    function show(i) {
+      current = (i + items.length) % items.length;
+      var slug = items[current].getAttribute("data-hero-item");
+      items.forEach(function (a, k) { a.classList.toggle("is-on", k === current); });
+      photos.forEach(function (img) {
+        var on = img.getAttribute("data-hero-photo") === slug;
+        if (on && img.loading === "lazy") img.loading = "eager";
+        img.classList.toggle("is-on", on);
+      });
+      if (metaOut) metaOut.textContent = items[current].getAttribute("data-hero-meta");
+    }
+    function run() {
+      clearInterval(timer);
+      if (!reduceMotion && !held && visible) timer = setInterval(function () { show(current + 1); }, 4200);
+    }
+    items.forEach(function (a, k) {
+      a.addEventListener("mouseenter", function () { held = true; show(k); run(); });
+      a.addEventListener("focus", function () { held = true; show(k); run(); });
+    });
+    var list = $(".hero-list", hero);
+    list.addEventListener("mouseleave", function () { held = false; run(); });
+    list.addEventListener("focusout", function (e) { if (!list.contains(e.relatedTarget)) { held = false; run(); } });
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (entries) { visible = entries[0].isIntersecting; run(); }).observe(hero);
+    }
+    // warm the other photos once the page has settled
+    window.addEventListener("load", function () {
+      setTimeout(function () { photos.forEach(function (img) { img.loading = "eager"; }); }, 1200);
+    });
+    run();
+  })();
+
+  /* ---------- hero collage (unused since the full-bleed hero; kept for product pages) ---------- */
   (function () {
   var collage = $("[data-collage]");
   if (collage && !reduceMotion) {
