@@ -157,7 +157,8 @@ def head(root, title, description, canonical, extra=""):
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="{root}favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="{root}apple-touch-icon.png">
-<link rel="preload" href="{root}fonts/archivo-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{root}fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{root}fonts/hedvig-letters-serif-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{root}css/style.css?v={CSS_V}">
 <script>document.documentElement.classList.add("js")</script>
 <script src="{root}js/main.js?v={JS_V}" defer></script>
@@ -356,43 +357,45 @@ def build_home():
         "description": SITE["description"],
     }
 
-    tiles = "".join(
-        f"""<li class="tile tile-{k}"><a class="tile-link" href="{product_href(root, q['slug'])}" aria-label="{e(q['name'])}" data-tile>
-            <img class="tile-img is-on" src="{root}img/{q['slug']}/c-720.webp" srcset="{srcset(root, q['slug'] + '/c')}" sizes="{'(min-width: 1000px) 30vw, 60vw' if k == 0 else '(min-width: 1000px) 18vw, 40vw'}" width="720" height="540" alt="" {'fetchpriority="high"' if k == 0 else ''} decoding="async">
-            <span class="tile-code" aria-hidden="true">{q['code']}</span>
-          </a></li>"""
-        for k, q in enumerate(collage[:3])
+    # full-bleed hero: one photo per product behind a large serif list; hovering a name swaps the photo
+    stage = "".join(
+        f"""<img class="stage-photo{' is-on' if k == 0 else ''}" data-hero-photo="{q['slug']}" src="{root}img/{q['slug']}/c-1600.webp" srcset="{srcset(root, q['slug'] + '/c')}" sizes="100vw" width="1600" height="1200" alt="" {'fetchpriority="high"' if k == 0 else 'loading="lazy"'} decoding="async">"""
+        for k, q in enumerate(collage)
     )
-    collage_data = e(json.dumps([
-        {"href": product_href(root, q["slug"]), "name": q["name"], "code": q["code"],
-         "src": f"{root}img/{q['slug']}/c-720.webp", "srcset": srcset(root, q["slug"] + "/c")}
-        for q in collage
-    ]))
+    hero_list = "".join(
+        f"""<li><a class="hero-item{' is-on' if k == 0 else ''}" href="{product_href(root, q['slug'])}" data-hero-item="{q['slug']}" data-hero-meta="{q['code']} · {e(q['brand'])} · {e(price_label(q))}">{e(q['name'])}</a></li>"""
+        for k, q in enumerate(collage)
+    )
+    first = collage[0]
 
     out = head(root, "3Deca · Production sound tools", SITE["description"], SITE["url"] + "/", json_ld(ld))
     out += '<body class="page-home">\n' + header(root)
     out += f"""<main id="main">
-  <section class="hero" aria-labelledby="hero-title">
-    <div class="container hero-grid">
+  <section class="hero" aria-labelledby="hero-title" data-hero>
+    <div class="hero-stage" aria-hidden="true">{stage}</div>
+    <div class="hero-shade" aria-hidden="true"></div>
+    <div class="container hero-top">
       <div class="hero-text">
         <h1 id="hero-title" class="hero-title">{ring_o(e(intro['title']))}</h1>
         <div class="hero-actions">
           <a class="btn btn-ink" href="#products">Products</a>
           <a class="text-link" href="#order">Order form</a>
         </div>
-        <ul class="facts" role="list">{facts}</ul>
       </div>
-      <figure class="hero-media" data-collage='{collage_data}'>
-        <ul class="collage" role="list">{tiles}</ul>
-      </figure>
+    </div>
+    <nav class="hero-nav" aria-label="Products">
+      <ul class="hero-list" role="list">{hero_list}</ul>
+    </nav>
+    <div class="container hero-bottom">
+      <ul class="facts" role="list">{facts}</ul>
+      <p class="hero-meta" data-hero-meta-out aria-hidden="true">{first['code']} · {e(first['brand'])} · {e(price_label(first))}</p>
     </div>
   </section>
 
-  <div class="container"><div class="rule" aria-hidden="true"><span class="rule-ring"></span></div></div>
   <section class="section shop" id="products" aria-labelledby="shop-title">
     <div class="container">
       <div class="section-bar">
-        <h2 id="shop-title" class="sr-only">Products</h2>
+        <h2 id="shop-title" class="section-title section-title-lg">Products</h2>
         <div class="filters" role="group" aria-label="Filter by system">{filters}</div>
       </div>
       <p class="sr-only" aria-live="polite" data-filter-status></p>
